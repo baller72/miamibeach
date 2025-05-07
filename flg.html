@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miami Beach - Expérience Immersive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <style>
+        :root {
+            --primary: #00b4db;
+            --secondary: #ff9f43;
+            --dark: #2d3436;
+            --light: #f9f9f9;
+            --gradient: linear-gradient(120deg, #00b4db, #0083b0);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+        
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader .wave {
+            width: 5px;
+            height: 100px;
+            background: linear-gradient(45deg, #00b4db, #0083b0);
+            margin: 10px;
+            animation: wave 1.2s linear infinite;
+            border-radius: 20px;
+        }
+        
+        .loader .wave:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+        
+        .loader .wave:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+        
+        .loader .wave:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+        
+        .loader .wave:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes wave {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(0);
+            }
+        }
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 100px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.5s;
+        }
+        
+        header.sticky {
+            background: white;
+            padding: 15px 100px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        header .logo {
+            color: white;
+            font-size: 24px;
+            text-transform: uppercase;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 2px;
+            transition: 0.5s;
+        }
+        
+        header.sticky .logo {
+            color: var(--primary);
+        }
+        
+        header ul {
+            position: relative;
+            display: flex;
+        }
+        
+        header ul li {
+            position: relative;
+            list-style: none;
+        }
+        
+        header ul li a {
+            position: relative;
+            display: inline-block;
+            margin: 0 15px;
+            color: white;
+            text-decoration: none;
+            transition: 0.5s;
+        }
+        
+        header.sticky ul li a {
+            color: var(--dark);
+        }
+        
+        header ul li a:hover {
+            color: var(--secondary);
+        }
+        
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: white;
+        }
+        
+        header.sticky .menu-toggle {
+            color: var(--dark);
+        }
+        
+        .banner {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: url('/api/placeholder/1920/1080') no-repeat;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 100px;
+        }
+        
+        .banner:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+        
+        .banner-content {
+            position: relative;
+            max-width: 900px;
+            text-align: center;
+            z-index: 1;
+        }
+        
+        .banner-content h2 {
+            color: #fff;
+            font-size: 5em;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+        
+        .banner-content h2 span {
+            color: var(--secondary);
+        }
+        
+        .banner-content p {
+            color: #fff;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: var(--gradient);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: 0.5s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: var(--secondary);
+            transition: 0.5s;
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            width: 100%;
+        }
+        
+        .wave-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+        
+        .wave {
+            width: 100%;
+            height: 100px;
+            fill: var(--light);
+        }
+        
+        section {
+            padding: 100px 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h2 {
+            font-size: 3em;
+            color: var(--dark);
+            position: relative;
+            display: inline-block;
+            padding-bottom: 20px;
+        }
+        
+        .section-title h2::before {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            background: var(--gradient);
+            bottom: 0;
+            left: 25%;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-gap: 30px;
+        }
+        
+        .feature-box {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.5s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-box:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-box::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+            transition: 0.5s;
+        }
+        
+        .feature-box:hover::before {
+            top: 0;
+        }
+        
+        .feature-box .icon {
+            margin-bottom: 20px;
+            font-size: 40px;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            background: var(--light);
+            color: var(--primary);
+            display: inline-block;
+            transition: 0.5s;
+        }
+        
+        .feature-box:hover .icon {
+            background: var(--gradient);
+            color: white;
+            transform: rotateY(360deg);
+            box-shadow: 0 0 20px rgba(0,180,219,0.4);
+        }
+        
+        .feature-box h3 {
+            font-size: 1.5em;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+        
+        .feature-box p {
+            color: #777;
+            line-height: 1.6;
+        }
+        
+        .gallery {
+            background: #f5f5f5;
+            position: relative;
+        }
+        
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-gap: 15px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            height: 300px;
+            cursor: pointer;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-item .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: 0.5s;
+        }
+        
+        .gallery-item:hover .overlay {
+            opacity: 1;
+        }
+        
+        .gallery-item .overlay h3 {
+            color: white;
+            font-size: 1.5em;
+            text-transform: uppercase;
+            text-align: center;
+            transform: translateY(50px);
+            transition: 0.5s;
+        }
+        
+        .gallery-item:hover .overlay h3 {
+            transform: translateY(0);
+        }
+        
+        .testimonials {
+            background: url('/api/placeholder/1920/1080') no-repeat fixed;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            padding: 150px 0;
+        }
+        
+        .testimonials::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+        }
+        
+        .testimonial-slider {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 50px;
+            z-index: 1;
+        }
+        
+        .testimonial-item {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .testimonial-item .quote {
+            font-size: 24px;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+        
+        .testimonial-item p {
+            color: white;
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .testimonial-item .info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .testimonial-item .info img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+        
+        .testimonial-item .info h3 {
+            color: white;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        
+        .testimonial-item .info span {
+            color: var(--secondary);
+        }
+        
+        .contact {
+            position: relative;
+            min-height: 100vh;
+            background: url('/api/placeholder/1920/1080') no-repeat;
+            background-size: cover;
+            background-position: center;
+            padding: 150px 0;
+        }
+        
+        .contact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+        }
+        
+        .contact-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .contact-info {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 50px;
+            border-radius: 10px 0 0 10px;
+        }
+        
+        .contact-info h3 {
+            color: white;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .contact-info .info-item {
+            display: flex;
+            margin-bottom: 30px;
+        }
+        
+        .contact-info .info-item .icon {
+            color: var(--secondary);
+            font-size: 24px;
+            margin-right: 20px;
+        }
+        
+        .contact-info .info-item .text h4 {
+            color: white;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        
+        .contact-info .info-item .text p {
+            color: #ddd;
+        }
+        
+        .contact-form {
+            flex: 1;
+            background: white;
+            padding: 50px;
+            border-radius: 0 10px 10px 0;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+        }
+        
+        .contact-form h3 {
+            color: var(--dark);
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 10px rgba(0,180,219,0.2);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 100px 0 20px;
+            position: relative;
+        }
+        
+        .footer-wave {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            width: 100%;
+        }
+        
+        .footer-wave svg {
+            fill: var(--dark);
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto 50px;
+            padding: 0 20px;
+        }
+        
+        .footer-box h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-box h3::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--secondary);
+        }
+        
+        .footer-box p {
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .footer-box .social {
+            display: flex;
+        }
+        
+        .footer-box .social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            transition: 0.5s;
+        }
+        
+        .footer-box .social a:hover {
+            background: var(--secondary);
+            transform: translateY(-5px);
+        }
+        
+        .footer-box .links li {
+            list-style: none;
+            margin-bottom: 10px;
+        }
+        
+        .footer-box .links li a {
+            color: #aaa;
+            text-decoration: none;
+            transition: 0.3s;
+            display: inline-block;
+        }
+        
+        .footer-box .links li a:hover {
+            color: var(--secondary);
+            transform: translateX(5px);
+        }
+        
+        .footer-box .contact-info li {
+            list-style: none;
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .footer-box .contact-info li .icon {
+            color: var(--secondary);
+            margin-right: 15px;
+        }
+        
+        .footer-box .contact-info li p {
+            margin: 0;
+        }
+        
+        .subscribe {
+            display: flex;
+        }
+        
+        .subscribe input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            outline: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 5px 0 0 5px;
+        }
+        
+        .subscribe button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+            transition: 0.3s;
+        }
+        
+        .subscribe button:hover {
+            background: #ff8c1a;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #aaa;
+        }
+        
+        /* Scroll to top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.5s;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            box-shadow: 0 0 20px rgba(0,180,219,0.4);
+        }
+        
+        .scroll-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-top:hover {
+            background: var(--secondary);
+            transform: translateY(-5px);
+        }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            position: relative;
+            max-width: 80%;
+            max-height: 80%;
+        }
+        
+        .modal-content img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            width: 30px;
+            height: 30px;
+            background: var(--secondary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: #ff8c1a;
+            transform: rotate(90deg);
+        }
+        
+        /* Responsive */
+        @media (max-width: 991px) {
+            header {
+                padding: 20px 50px;
+            }
+            
+            header.sticky {
+                padding: 15px 50px;
+            }
+            
+            .banner-content h2 {
+                font-size: 3em;
+            }
+            
+            .contact-container {
+                flex-direction: column;
+            }
+            
+            .contact-info,
+            .contact-form {
+                border-radius: 10px;
+                margin-bottom: 30px;
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+            
+            header.sticky {
+                padding: 10px 20px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            header ul {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 80%;
+                height: 100%;
+                background: white;
+                flex-direction: column;
+                justify-content: center;
+                transition: 0.5s;
+                z-index: 999;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            }
+            
+            header ul.active {
+                left: 0;
+            }
+            
+            header ul li {
+                margin: 15px 0;
+            }
+            
+            header ul li a {
+                color: var(--dark);
+                font-size: 1.5em;
+            }
+            
+            .close-menu {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+                background: var(--primary);
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+            
+            .banner {
+                padding: 100px 20px;
+            }
+            
+            .banner-content h2 {
+                font-size: 2.5em;
+            }
+            
+            .banner-content p {
+                font-size: 1em;
+            }
+            
+            section {
+                padding: 80px 0;
+            }
+            
+            .section-title h2 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="loader">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <a href="#" class="logo">Miami Beach</a>
+        <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+        <ul>
+            <div class="close-menu"><i class="fas fa-times"></i></div>
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#gallery">Galerie</a></li>
+            <li><a href="#testimonials">Témoignages</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </header>
+    
+    <!-- Banner -->
+    <section id="home" class="banner">
+        <div class="banner-content" data-aos="zoom-in" data-aos-duration="1000">
+            <h2>Bienvenue à <span>Miami Beach</span></h2>
+            <p>Découvrez une expérience balnéaire unique avec nos eaux cristallines, nos plages de sable fin et notre atmosphère incomparable. Profitez de moments inoubliables dans ce paradis tropical.</p>
+            <a href="#contact" class="btn">Réserver maintenant</a>
+        </div>
+        <div class="wave-container">
+            <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill-opacity="1" d="M0,192L48,176C96,160,192,128,288,133.3C384,139,480,181,576,186.7C672,192,768,160,864,138.7C960,117,1056,107,1152,112C1248,117,1344,139,1392,149.3L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </section>
+    
+    <!-- Services -->
+    <section id="services">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Nos Services</h2>
+            </div>
+            <div class="features">
+                <div class="feature-box" data-aos="fade-up" data-aos-delay="100">
+                    <div class="icon"><i class="fas fa-swimmer"></i></div>
+                    <h3>Sports Nautiques</h3>
+                    <p>Découvrez une variété d'activités nautiques palpitantes comme le jet ski, la planche à voile, le paddle et la plongée sous-marine pour des sensations inoubliables.</p>
+                </div>
+                <div class="feature-box" data-aos="fade-up" data-aos-delay="200">
+                    <div class="icon"><i class="fas fa-cocktail"></i></div>
+                    <h3>Bars & Restaurants</h3>
+                    <p>Savourez des délices culinaires internationaux et locaux dans nos restaurants de plage et profitez de cocktails exotiques préparés par nos mixologues experts.</p>
+                </div>
+                <div class="feature-box" data-aos="fade-up" data-aos-delay="300">
+                    <div class="icon"><i class="fas fa-spa"></i></div>
+                    <h3>Spa & Bien-être</h3>
+                    <p>Offrez-vous un moment de détente ultime avec nos soins spa de luxe, massages relaxants et services de beauté pour revitaliser votre corps et votre esprit.</p>
+                </div>
+                <div class="feature-box" data-aos="fade-up" data-aos-delay="400">
+                    <div class="icon"><i class="fas fa-music"></i></div>
+                    <h3>Événements & Fêtes</h3>
+                    <p>Participez à nos événements exclusifs, soirées à thème et festivals de musique organisés régulièrement avec des DJs internationaux renommés.</p>
+                </div>
+                <div class="feature-box" data-aos="fade-up" data-aos-delay="500">
+                    <div class="icon"><i class="fas fa-umbrella-beach"></i></div>
+                    <h3>Plage Privée</h3>
+                    <p>Détendez-vous sur notre plage privée avec service de conciergerie, chaises longues luxueuses et parasols pour une expérience VIP incomparable.</p>
+                </div>
+                <div class="feature-box" data-aos="fade-up" data-aos-delay="600">
+                    <div class="icon"><i class="fas fa-volleyball-ball"></i></div>
+                    <h3>Activités Sportives</h3>
+                    <p>Restez actif avec nos installations sportives incluant beach-volley, tennis, yoga sur la plage et sessions de fitness en plein air avec vue sur l'océan.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Gallery -->
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Notre Galerie</h2>
+            </div>
+            <div class="gallery-container">
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="/api/placeholder/600/400" alt="Plage">
+                    <div class="overlay">
+                        <h3>Plage Magnifique</h3>
+                    </div>
+                </div>
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="/api/placeholder/600/400" alt="Coucher de soleil">
+                    <div class="overlay">
+                        <h3>Coucher de Soleil</h3>
+                    </div>
+                </div>
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="/api/placeholder/600/400" alt="Water Sports">
+                    <div class="overlay">
+                        <h3>Sports Nautiques</h3>
+                    </div>
+                </div>
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="400">
+                    <img src="/api/placeholder/600/400" alt="Restaurant">
+                    <div class="overlay">
+                        <h3>Restaurant de Plage</h3>
+                    </div>
+                </div>
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="500">
+                    <img src="/api/placeholder/600/400" alt="Cocktail Bar">
+                    <div class="overlay">
+                        <h3>Bar à Cocktails</h3>
+                    </div>
+                </div>
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="600">
+                    <img src="/api/placeholder/600/400" alt="Spa">
+                    <div class="overlay">
+                        <h3>Spa & Bien-être</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2 style="color: white;">Témoignages</h2>
+            </div>
+            <div class="testimonial-slider" data-aos="fade-up">
+                <div class="testimonial-item">
+                    <div class="quote"><i class="fas fa-quote-left"></i></div>
+                    <p>Une expérience incroyable à Miami Beach ! Le service était exceptionnel, la plage magnifique et les activités nautiques inoubliables. Je reviendrai certainement l'année prochaine !</p>
+                    <div class="info">
+                        <img src="/api/placeholder/60/60" alt="Client">
+                        <div>
+                            <h3>Sophie Martin</h3>
+                            <span>Paris, France</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2 style="color: white;">Contactez-nous</h2>
+            </div>
+            <div class="contact-container">
+                <div class="contact-info" data-aos="fade-right">
+                    <h3>Informations</h3>
+                    <div class="info-item">
+                        <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="text">
+                            <h4>Adresse</h4>
+                            <p>1234 Ocean Drive, Miami Beach, FL 33139, USA</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="icon"><i class="fas fa-phone"></i></div>
+                        <div class="text">
+                            <h4>Téléphone</h4>
+                            <p>+1 (305) 555-1234</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="icon"><i class="fas fa-envelope"></i></div>
+                        <div class="text">
+                            <h4>Email</h4>
+                            <p>info@miamibeach.com</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="icon"><i class="fas fa-clock"></i></div>
+                        <div class="text">
+                            <h4>Heures d'ouverture</h4>
+                            <p>7j/7, de 9h à 22h</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form" data-aos="fade-left">
+                    <h3>Envoyez-nous un message</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Nom complet</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Adresse email</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Sujet</label>
+                            <input type="text" id="subject" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" class="form-control" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Envoyer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-wave">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill-opacity="1" d="M0,64L48,80C96,96,192,128,288,138.7C384,149,480,139,576,122.7C672,107,768,85,864,90.7C960,96,1056,128,1152,138.7C1248,149,1344,139,1392,133.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+        <div class="footer-container">
+            <div class="footer-box">
+                <h3>À propos de nous</h3>
+                <p>Miami Beach est une destination de rêve offrant une expérience balnéaire unique, des services de qualité et des souvenirs inoubliables pour tous nos visiteurs.</p>
+                <div class="social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-box">
+                <h3>Liens rapides</h3>
+                <ul class="links">
+                    <li><a href="#home">Accueil</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#gallery">Galerie</a></li>
+                    <li><a href="#testimonials">Témoignages</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#">Politique de confidentialité</a></li>
+                    <li><a href="#">Conditions d'utilisation</a></li>
+                </ul>
+            </div>
+            <div class="footer-box">
+                <h3>Contact</h3>
+                <ul class="contact-info">
+                    <li>
+                        <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <p>1234 Ocean Drive, Miami Beach, FL 33139, USA</p>
+                    </li>
+                    <li>
+                        <div class="icon"><i class="fas fa-phone"></i></div>
+                        <p>+1 (305) 555-1234</p>
+                    </li>
+                    <li>
+                        <div class="icon"><i class="fas fa-envelope"></i></div>
+                        <p>info@miamibeach.com</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="footer-box">
+                <h3>Newsletter</h3>
+                <p>Abonnez-vous à notre newsletter pour recevoir nos dernières offres et actualités.</p>
+                <div class="subscribe">
+                    <input type="email" placeholder="Votre email">
+                    <button><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Miami Beach. Tous droits réservés.</p>
+        </div>
+    </footer>
+    
+    <!-- Scroll to top button -->
+    <div class="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-close"><i class="fas fa-times"></i></div>
+            <img src="" alt="">
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            mirror: false
+        });
+        
+        // Preloader
+        window.addEventListener('load', function() {
+            const loader = document.querySelector('.loader');
+            setTimeout(function() {
+                loader.classList.add('hidden');
+            }, 1000);
+        });
+        
+        // Sticky header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            header.classList.toggle('sticky', window.scrollY > 0);
+            
+            // Scroll to top button
+            const scrollTop = document.querySelector('.scroll-top');
+            scrollTop.classList.toggle('active', window.scrollY > 500);
+        });
+        
+        // Mobile menu
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navigation = document.querySelector('header ul');
+        const closeMenu = document.querySelector('.close-menu');
+        
+        menuToggle.addEventListener('click', function() {
+            navigation.classList.add('active');
+        });
+        
+        closeMenu.addEventListener('click', function() {
+            navigation.classList.remove('active');
+        });
+        
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigation.classList.remove('active');
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Scroll to top
+        document.querySelector('.scroll-top').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Gallery modal
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const modal = document.querySelector('.modal');
+        const modalImg = document.querySelector('.modal-content img');
+        const modalClose = document.querySelector('.modal-close');
+        
+        galleryItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const imgSrc = this.querySelector('img').getAttribute('src');
+                modalImg.setAttribute('src', imgSrc);
+                modal.classList.add('active');
+            });
+        });
+        
+        modalClose.addEventListener('click', function() {
+            modal.classList.remove('active');
+        });
+        
+        // Counter animation
+        function animateCounter(el, start, end, duration) {
+            let startTime = null;
+            
+            function animation(currentTime) {
+                if (!startTime) startTime = currentTime;
+                const timeElapsed = currentTime - startTime;
+                const run = Math.easeInOutQuad(timeElapsed, start, end - start, duration);
+                el.textContent = Math.floor(run);
+                if (timeElapsed < duration) requestAnimationFrame(animation);
+                else el.textContent = end;
+            }
+            
+            // Easing function
+            Math.easeInOutQuad = function(t, b, c, d) {
+                t /= d / 2;
+                if (t < 1) return c / 2 * t * t + b;
+                t--;
+                return -c / 2 * (t * (t - 2) - 1) + b;
+            };
+            
+            requestAnimationFrame(animation);
+        }
+        
+        // Contact form validation
+        const contactForm = document.getElementById('contactForm');
+        
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const subject = document.getElementById('subject').value;
+                const message = document.getElementById('message').value;
+                
+                // Simple validation
+                if (name.trim() === '' || email.trim() === '' || message.trim() === '') {
+                    alert('Veuillez remplir tous les champs obligatoires.');
+                    return false;
+                }
+                
+                // Email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert('Veuillez entrer une adresse email valide.');
+                    return false;
+                }
+                
+                // If validation passes, show success message
+                alert('Votre message a été envoyé avec succès! Nous vous contacterons bientôt.');
+                contactForm.reset();
+            });
+        }
+        
+        // Parallax effect
+        window.addEventListener('scroll', function() {
+            const parallax = document.querySelector('.banner');
+            let scrollPosition = window.pageYOffset;
+            
+            parallax.style.backgroundPositionY = scrollPosition * 0.5 + 'px';
+        });
+        
+        // Testimonial slider
+        let testimonialItems = [
+            {
+                quote: "Une expérience incroyable à Miami Beach ! Le service était exceptionnel, la plage magnifique et les activités nautiques inoubliables. Je reviendrai certainement l'année prochaine !",
+                name: "Sophie Martin",
+                location: "Paris, France"
+            },
+            {
+                quote: "Les meilleurs vacances de ma vie ! Le personnel est attentionné, la nourriture délicieuse et les activités variées. Miami Beach est vraiment le paradis sur terre.",
+                name: "John Williams",
+                location: "Londres, UK"
+            },
+            {
+                quote: "Nous avons adoré chaque moment passé à Miami Beach. L'ambiance est incroyable, les installations sont modernes et propres. Un endroit parfait pour se détendre et s'amuser.",
+                name: "Maria Rodriguez",
+                location: "Madrid, Espagne"
+            }
+        ];
+        
+        let currentTestimonial = 0;
+        const testimonialSlider = document.querySelector('.testimonial-slider');
+        
+        // Display first testimonial
+        displayTestimonial(0);
+        
+        // Function to display testimonial
+        function displayTestimonial(index) {
+            const item = testimonialItems[index];
+            testimonialSlider.innerHTML = `
+                <div class="testimonial-item">
+                    <div class="quote"><i class="fas fa-quote-left"></i></div>
+                    <p>${item.quote}</p>
+                    <div class="info">
+                        <img src="/api/placeholder/60/60" alt="Client">
+                        <div>
+                            <h3>${item.name}</h3>
+                            <span>${item.location}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Auto change testimonial
+        setInterval(function() {
+            currentTestimonial = (currentTestimonial + 1) % testimonialItems.length;
+            displayTestimonial(currentTestimonial);
+        }, 5000);
+        
+        // Dynamic countdown for special offers
+        function countdown() {
+            const now = new Date();
+            const eventDate = new Date(now);
+            eventDate.setDate(eventDate.getDate() + 7); // Example: event in 7 days
+            
+            const currentTime = now.getTime();
+            const eventTime = eventDate.getTime();
+            
+            const remTime = eventTime - currentTime;
+            
+            const s = Math.floor(remTime / 1000);
+            const m = Math.floor(s / 60);
+            const h = Math.floor(m / 60);
+            const d = Math.floor(h / 24);
+            
+            const days = d;
+            const hours = h % 24;
+            const minutes = m % 60;
+            const seconds = s % 60;
+            
+            // Update countdown elements if they exist
+            if (document.getElementById('days')) document.getElementById('days').innerText = days;
+            if (document.getElementById('hours')) document.getElementById('hours').innerText = hours;
+            if (document.getElementById('minutes')) document.getElementById('minutes').innerText = minutes;
+            if (document.getElementById('seconds')) document.getElementById('seconds').innerText = seconds;
+        }
+        
+        // Run countdown every second
+        setInterval(countdown, 1000);
+        
+        // Weather widget animation
+        const weatherIcons = document.querySelectorAll('.weather-icon');
+        if (weatherIcons.length > 0) {
+            weatherIcons.forEach(icon => {
+                setInterval(() => {
+                    icon.classList.toggle('pulse');
+                }, 2000);
+            });
+        }
+        
+        // Custom cursor effect
+        document.addEventListener('mousemove', function(e) {
+            const cursor = document.querySelector('.custom-cursor');
+            if (cursor) {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            }
+        });
+    </script>
+</body>
+</html>
